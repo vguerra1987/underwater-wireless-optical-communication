@@ -88,10 +88,11 @@ scenario.extinction = extinction;
 scenario.limits = scenario_limits;
 scenario.max_hops = 4;
 scenario.power_threshold = 1e-14;
-scenario.plot = 1;
+scenario.plot = 0;
+scenario.info_period = 100; % Display information after 100 iterations
 
 % We have to add the specific simulation parameters
-scenario.N = 10000; % Rays on light source
+scenario.N = 1000; % Rays on light source
 scenario.M = 10;   % Rays on each scatterer
 
 particle.params = g;
@@ -117,7 +118,13 @@ impulse_response = monte_carlo(tx, rx, particle, scenario);
 % This is a TODO!
 
 optics.type = 'CPC';
-optics.params = 30*pi/180; % In this case corresponds to 30 degrees FOV
+optics.params = 30*pi/180; % In this case corresponds to 30 degrees FOV FWHM
 optics.area = pi/4*(5e-3)^2; % 5mm diameter receiver
+optics.orientation = [0,0,-1]; % pointing vector
 
-h_t = project_response(impulse_response, optics);
+[time, h_t] = project_response(impulse_response, scenario, optics);
+
+% Finally we plot the response
+scatter(time*1e9, 10*log10(h_t));
+
+[H, BW] = channelParameters(time, h_t);

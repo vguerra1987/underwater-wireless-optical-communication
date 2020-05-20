@@ -40,10 +40,14 @@ for i = 1:scenario.N
     buff.push(ray);
 end
 
+iteration_counter = 1;
+
 % While there exist rays to process...
 while(~isempty(buff.storage))
     
-    %     fprintf('Rays in buffer: %d\n', length(buff.storage));
+    if (~rem(iteration_counter, scenario.info_period))
+        fprintf('Rays in buffer: %d\n', length(buff.storage));
+    end
     
     currentRay = buff.pop();
     
@@ -128,5 +132,6 @@ while(~isempty(buff.storage))
         
     end
     
-    
+    % We update the iteration counter
+    iteration_counter = iteration_counter + 1;
 end
