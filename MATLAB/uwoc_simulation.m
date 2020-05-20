@@ -121,6 +121,8 @@ optics.type = 'CPC';
 optics.params = 30*pi/180; % In this case corresponds to 30 degrees FOV FWHM
 optics.area = pi/4*(5e-3)^2; % 5mm diameter receiver
 optics.orientation = [0,0,-1]; % pointing vector
+optics.material = 'PMMA';
+optics.n = 1.45;
 
 [time, h_t] = project_response(impulse_response, scenario, optics);
 

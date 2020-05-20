@@ -12,6 +12,9 @@ h_t = zeros(size(time));
 % effectively or not
 cos_half_fov = cos(optics.params/2);
 
+% Lens gain (CPC gain)
+lens_gain = (optics.n/sin(optics.params/2))^2;
+
 % Counter to iterate on time and h_t
 counter = 1;
 for ray = impulse_response.storage
@@ -21,7 +24,7 @@ for ray = impulse_response.storage
     % Entry condition check (ray is within rx's FOV)
     if (cos_half_fov < impact_cosine)
         time(counter) = t;
-        h_t(counter) = ray{1}.power*impact_cosine*optics.area;
+        h_t(counter) = ray{1}.power*impact_cosine*optics.area*lens_gain;
     end
     
     counter = counter + 1;
