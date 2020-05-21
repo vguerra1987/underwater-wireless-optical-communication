@@ -72,13 +72,13 @@ beta = extinction - alfa;
 % goint outside the cube of interest.
 
 % Transmitter position, must be inside the cube-of-interest
-tx_pos = [0,0,-2];
+tx_pos = [0,0,0];
 
 % We define here the Lambertian degeneration factor (m)
 lambertian_factor = 1; % Pure Lambertian
 
 % Receiver position, the same constraint as above.
-rx_pos = [0,0,4];
+rx_pos = [0,0,3];
 
 % We group parameters to ease the understading of the simulation call
 scenario.n = refractive_index;
@@ -89,10 +89,10 @@ scenario.limits = scenario_limits;
 scenario.max_hops = 4;
 scenario.power_threshold = 1e-14;
 scenario.plot = 0;
-scenario.info_period = 100; % Display information after 100 iterations
+scenario.info_period = 1000; % Display information after 1000 iterations
 
 % We have to add the specific simulation parameters
-scenario.N = 1000; % Rays on light source
+scenario.N = 10000; % Rays on light source
 scenario.M = 10;   % Rays on each scatterer
 
 particle.params = g;
@@ -129,4 +129,4 @@ optics.n = 1.45;
 % Finally we plot the response
 scatter(time*1e9, 10*log10(h_t));
 
-[H, BW] = channelParameters(time, h_t);
+[H, BW] = channelParameters(time, h_t)

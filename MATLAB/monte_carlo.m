@@ -5,11 +5,11 @@ function impulse_response = monte_carlo(tx, rx, particle, scenario)
 
 % Preparation of figure
 if scenario.plot
-   figure('Color','white');
-   scatter(0,Inf);
-   hold on;
-   xlabel('Time (nanoseconds)', 'interpreter', 'latex', 'fontsize', 16);
-   ylabel('Power (dBm)', 'interpreter', 'latex', 'fontsize', 16);
+    figure('Color','white');
+    scatter(0,Inf);
+    hold on;
+    xlabel('Time (nanoseconds)', 'interpreter', 'latex', 'fontsize', 16);
+    ylabel('Power (dBm)', 'interpreter', 'latex', 'fontsize', 16);
 end
 
 % Result will be provided as a Buffer
@@ -42,11 +42,34 @@ end
 
 iteration_counter = 1;
 
+% Last buffer length
+last_buff_len = length(buff.storage);
+buffer_empty_rate = 0;
+
+% We start counting time
+tic;
+
 % While there exist rays to process...
 while(~isempty(buff.storage))
     
     if (~rem(iteration_counter, scenario.info_period))
         fprintf('Rays in buffer: %d\n', length(buff.storage));
+        
+        elapsed_time = toc;
+        aux = (last_buff_len - length(buff.storage))...
+            /elapsed_time;
+        
+        % We update the buffer length for the next report
+        last_buff_len = length(buff.storage);
+        
+        if (aux > 0)
+            buffer_empty_rate = 0.75*buffer_empty_rate + 0.25*aux;
+            fprintf('Time to end: %d minutes\n',...
+                fix(length(buff.storage)/buffer_empty_rate/60));
+            fprintf('\n');
+        end
+        tic;
+        
     end
     
     currentRay = buff.pop();
@@ -58,8 +81,10 @@ while(~isempty(buff.storage))
     %     fprintf('------------\n\n');
     
     if (currentRay.hop == scenario.max_hops)
+        iteration_counter = iteration_counter + 1;
         continue;
     elseif (currentRay.power < scenario.power_threshold)
+        iteration_counter = iteration_counter + 1;
         continue;
     end
     
