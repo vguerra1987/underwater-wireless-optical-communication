@@ -15,8 +15,8 @@ if strcmp(type, 'Lambertian')
     end
     
 elseif strcmp(type, 'HG')
-    % TODO
-    theta = 2*pi*rand;
+    g = params;
+    theta = acos(1/2/g*(1 + g^2 - ((1 - g^2)/(1 + g*(2*rand -1)))^2));
     phi = pi*rand;
 end
 

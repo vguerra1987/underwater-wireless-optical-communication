@@ -112,7 +112,8 @@ while(~isempty(buff.storage))
         
         % We update its weigth
         nextRay.power = nextRay.power*...
-            outputPower(particle.type,particle.params);
+            outputPower(particle.type, particle.params, ...
+                        nextRay.getTheta(nextRay.direction));
         
         % is direct, we define it
         nextRay.is_direct = 1;
